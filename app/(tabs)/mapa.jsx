@@ -14,11 +14,10 @@ export default function mapa() {
             setLocation(currentPosition);
             console.log("Localização atual: ", currentPosition);
         } else {
-            console.log("Ferrou")
+            console.log("Localização Negada");
         }
-        
     }
-
+    
     useEffect(() =>{
         requestLocationPermissions();
     }, []
@@ -28,20 +27,25 @@ export default function mapa() {
         <View style={styles.container}>
             {location && (
                 <MapView
+                    //Puxa a localização
                     ref={mapRef}
+                    //Incrivelmente a propriedade styles é necessária para carregar o mapa na view
                     style={styles.map}
+                    //A região Inicial do mapa é traga por essas duas propriedades, que puxam de location
                     initialRegion={{
                         latitude: location.coords.latitude,
                         longitude: location.coords.longitude,
-                        latitudeDelta: 0.0922,
-                        longitudeDelta: 0.0421,
+                        latitudeDelta: 0.1,
+                        longitudeDelta: 0.04,
                     }}
-                >
+                >   
+                    {/* Elemento puramente visual, apenas um marcador do google maps */}
                     <Marker
                         coordinate={{
                             latitude: location.coords.latitude,
                             longitude: location.coords.longitude,
                         }}
+                        //Texto do marcador
                         title="Localização Atual"
                     />
                 </MapView>
