@@ -23,6 +23,23 @@ export default function mapa() {
     }, []
     )
 
+    useEffect(() =>{
+        Location.watchPositionAsync({
+            accuracy: Location.Accuracy.Highest,
+            timeInterval: 1000,
+            distanceInterval: 1
+        }, (response) =>{
+            setLocation(response);
+            if (mapRef.current){
+                mapRef.current.animateCamera({
+                    pitch: 70,
+                    center: response.coords
+                })
+            }
+        }
+        )},[]
+    );
+
     return (
         <View style={styles.container}>
             {location && (
