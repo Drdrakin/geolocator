@@ -32,12 +32,21 @@ export default function TabLayout() {
           ),
         }}
       />
-        <Tabs.Screen
+      <Tabs.Screen
         name="mapa"
         options={{
           title: 'Mapa',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'map' : 'map-outline'} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="camera"
+        options={{
+          title: 'Camera',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'camera' : 'camera-outline'} color={color} />
           ),
         }}
       />

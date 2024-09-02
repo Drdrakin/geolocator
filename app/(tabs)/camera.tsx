@@ -1,12 +1,12 @@
-import {Camera, CameraType, CameraView, useCameraPermission } from 'expo-camera';
+import {Camera, CameraType, CameraView, useCameraPermissions } from 'expo-camera';
 import { useState, useRef } from 'react';
-import { Button, Stylesheet, Text, TouchableOpacity, View, Image } from 'react-native';
+import { Button, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
 import * as Sharing from 'expo-sharing';
 
 export default function App(){
     const [flipcam, setFlipcam] = useState<CameraType>('back');
-    const [permission, requestPermission] = useCameraPermission();
+    const [permission, requestPermission] = useCameraPermissions();
     const cameraRef = useRef<CameraView>(null);
     const [foto, setFoto] = useState<string | null>(null);
 
@@ -20,7 +20,9 @@ export default function App(){
                 <Text style={styles.message}>Preciso de permissão</Text>
                 <Button onPress={requestPermission} title="Conceder Permissão"/>
             </View>
-        )
+        );
+    }
+    
         function trocarCamera(){
             setFlipcam(current => (current === 'back' ? 'front' : 'back'));
         }
@@ -41,46 +43,85 @@ export default function App(){
             <View style={styles.container}>
                 <CameraView style={styles.camera} ref={cameraRef} facing={flipcam}>
                     <View style={styles.rodape}>
+                        {/* Primeiro botão */}
                         <View style={styles.buttonContainer}>
-                            <TouchableOpacity style={styles.button} onPress={trocarCamera}>
+                            <TouchableOpacity 
+                                style={styles.button} 
+                                onPress={trocarCamera}>
                                 <Entypo name="cw" size={24} color="white"/>
                                 <Text style={styles.text}>Flip Camera</Text>
                             </TouchableOpacity>
                         </View>
+                        {/* Segundo botão */}
                         <View style={styles.buttonContainer}>
                             <TouchableOpacity
                                 style={styles.button}
-                                onPress={async () => {
+                                onPress={ async () => {
                                     if (cameraRef.current) {
                                         let photo = await cameraRef.current.takePictureAsync();
-                                        console.log(photo.uri);
-                                    }
-                                }}
+                                        console.log('foto', photo);
+                                        setFoto(photo.uri);
+                                    }}
+                                }
                             >
                                 <Entypo name="camera" size={24} color="white"/>
-                                <Text style={styles.text}>Tirar foto</Text>
+                                <Text style={styles.text}>Tirar Foto</Text>
                             </TouchableOpacity>
+                            {foto &&(
+                                <View>
+                                    <TouchableOpacity
+                                        style={styles.button}
+                                        onPress={compartilharFoto}
+                                    >
+                                        <Entypo name="share" size={24} color="white"/>
+                                        <Text style={styles.text}>Compartilhar Foto</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            )}
                         </View>
                     </View>
                 </CameraView>
+                {foto && <Image source={{ uri: foto }} style={{width:200, height: 200}}/>}
             </View>
         )
-    }
 }
 
+
 const styles = StyleSheet.create({
-    headerImage: {
-        color: '#808080',
-        bottom: -90,
-        left: -35,
-        position: 'absolute',
-    },
-    titleContainer: {
-        flexDirection: 'row',
-        gap: 8,
-    },
     container: {
+        flex: 1,
+        justifyContent: 'center',
+    },
+    camera: {
         flex: 1
+    },
+    buttonContainer: {
+        flex: 1,
+        backgroundColor: 'transparent',
+        marginTop: 5,
+        gap: 10
+    },
+    button: {
+        flex: 1,
+        alignItems: 'center',
+        flexDirection: 'row',
+        textAlign: 'left',
+        gap: 20
+    },
+    text: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: 'white'
+    },
+    rodape: {
+        position: 'absolute',
+        top: '80%',
+        left: '30%',
+        marginBottom: 35
+    },
+    message: {
+        textAlign: 'center',
+        paddingBottom: 10
     }
-  });
+});
   
