@@ -50,6 +50,15 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="qrcode"
+        options={{
+          title: 'Scan',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? "scan" : 'scan-outline'} color={color} />
+          ),
+        }}
+      />
     </Tabs>
   );
 }
